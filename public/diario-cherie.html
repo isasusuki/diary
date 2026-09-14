@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diário Chérie 🎀 - Diário Aesthetic & Girly</title>
+  
+  <!-- Tailwind CSS Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            caveat: ['Caveat', 'cursive'],
+            dancing: ['Dancing Script', 'cursive'],
+            sacramento: ['Sacramento', 'cursive'],
+            patrick: ['Patrick Hand', 'cursive'],
+            kalam: ['Kalam', 'cursive'],
+            quicksand: ['Quicksand', 'sans-serif'],
+            comfortaa: ['Comfortaa', 'cursive'],
+            playfair: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Comfortaa:wght@400;600;700&family=Dancing+Script:wght@500;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Quicksand:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- React 18 & ReactDOM 18 -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* Paper textures */
+    .paper-lined {
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 27px,
+        rgba(224, 172, 192, 0.4) 27px,
+        rgba(224, 172, 192, 0.4) 28px
+      );
+      line-height: 28px;
+    }
+    .paper-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(220, 180, 200, 0.3) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(220, 180, 200, 0.3) 1px, transparent 1px);
+    }
+    .paper-dots {
+      background-size: 22px 22px;
+      background-image: radial-gradient(circle, rgba(205, 160, 185, 0.45) 1.5px, transparent 1.5px);
+    }
+    .paper-kraft {
+      background-color: #F7EFE5;
+      background-image: radial-gradient(rgba(190, 160, 140, 0.15) 1px, transparent 0);
+      background-size: 16px 16px;
+    }
+    .paper-plain {
+      background-color: #FFFDF9;
+    }
+    .washi-tape-strip {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      backdrop-filter: blur(1px);
+      opacity: 0.92;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FDF4F7;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #F2BDD0;
+      border-radius: 9999px;
+      border: 2px solid #FDF4F7;
+    }
+  </style>
+</head>
+<body class="bg-[#FAF5F7] text-[#4A3B43] antialiased selection:bg-[#FAD2E1] selection:text-[#5E3048]">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- Web Audio Synthesizer (Zero dependencies, offline friendly) ---
+    class CozyAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.isPlayingMusic = false;
+        this.musicInterval = null;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playCutePop() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const now = this.ctx.currentTime;
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(580, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } catch (e) {}
+      }
+      playSparkle() {
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            const startTime = this.ctx.currentTime + idx * 0.06;
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.08, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.35);
+          });
+        } catch (e) {}
+      }
+      toggleAmbientLofi(onStateChange) {
+        if (this.isPlayingMusic) {
+          this.stopAmbientLofi();
+          if (onStateChange) onStateChange(false);
+          return false;
+        } else {
+          this.startAmbientLofi();
+          if (onStateChange) onStateChange(true);
+          return true;
+        }
+      }
+      startAmbientLofi() {
+        this.init();
+        if (!this.ctx) return;
+        this.isPlayingMusic = true;
+        const melodyNotes = [440, 493.88, 554.37, 659.25, 739.99, 880, 987.77, 1108.73];
+        const playNote = () => {
+          if (!this.isPlayingMusic || !this.ctx) return;
+          const note = melodyNotes[Math.floor(Math.random() * melodyNotes.length)];
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(note, now);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 1.2);
+        };
+        playNote();
+        this.musicInterval = window.setInterval(playNote, 600);
+      }
+      stopAmbientLofi() {
+        this.isPlayingMusic = false;
+        if (this.musicInterval) {
+          clearInterval(this.musicInterval);
+          this.musicInterval = null;
+        }
+      }
+    }
+    const cozyAudio = new CozyAudioEngine();
+
+    // --- Themes ---
+    const PASTEL_THEMES = [
+      { id: 'strawberry', name: 'Strawberry Milk 🍓', badge: 'Rosa Pastel', bgApp: 'bg-[#FFF5F8]', accent: '#F472B6', primaryBtn: 'bg-[#FB7185] hover:bg-[#F43F5E]' },
+      { id: 'lavender', name: 'Lavender Haze 💜', badge: 'Lilás Sonho', bgApp: 'bg-[#FAF5FF]', accent: '#A855F7', primaryBtn: 'bg-[#A855F7] hover:bg-[#9333EA]' },
+      { id: 'matcha', name: 'Mint Matcha 🍵', badge: 'Menta Pastel', bgApp: 'bg-[#F4FBF7]', accent: '#34D399', primaryBtn: 'bg-[#10B981] hover:bg-[#059669]' },
+      { id: 'peach', name: 'Peach Sorbet 🍑', badge: 'Pêssego Delicado', bgApp: 'bg-[#FFF8F3]', accent: '#FB923C', primaryBtn: 'bg-[#F97316] hover:bg-[#EA580C]' },
+      { id: 'sky', name: 'Vanilla Cloud ☁️', badge: 'Azul Céu', bgApp: 'bg-[#F0F9FF]', accent: '#38BDF8', primaryBtn: 'bg-[#0284C7] hover:bg-[#0369A1]' },
+      { id: 'coquette', name: 'Coquette Buttercup 🎀', badge: 'Champagne & Laços', bgApp: 'bg-[#FEFCE8]', accent: '#EAB308', primaryBtn: 'bg-[#CA8A04] hover:bg-[#A16207]' }
+    ];
+
+    // --- Stickers & Presets ---
+    const STICKER_CATEGORIES = [
+      {
+        id: 'coquette', name: 'Laços & Coquette', icon: '🎀',
+        stickers: [
+          { id: 'ribbon-pink', content: '🎀', label: 'Laço Rosa' },
+          { id: 'heart-sparkle', content: '💖', label: 'Coração Rosa' },
+          { id: 'heart-ribbon', content: '💝', label: 'Presente' },
+          { id: 'ballet', content: '🩰', label: 'Sapatilha' },
+          { id: 'crown', content: '👑', label: 'Coroa' },
+          { id: 'mirror', content: '🪞', label: 'Espelho' },
+          { id: 'flower', content: '🌸', label: 'Cerejeira' },
+          { id: 'perfume', content: '🧴', label: 'Perfume' }
+        ]
+      },
+      {
+        id: 'animals', name: 'Bichinhos Fofos', icon: '🧸',
+        stickers: [
+          { id: 'teddy', content: '🧸', label: 'Ursinho' },
+          { id: 'bunny', content: '🐰', label: 'Coelhinha' },
+          { id: 'cat', content: '🐱', label: 'Gatinha' },
+          { id: 'puppy', content: '🐶', label: 'Cachorrinho' },
+          { id: 'chick', content: '🐥', label: 'Pintinho' },
+          { id: 'butterfly', content: '🦋', label: 'Borboleta' }
+        ]
+      },
+      {
+        id: 'sweets', name: 'Doces & Delícias', icon: '🍓',
+        stickers: [
+          { id: 'strawberry', content: '🍓', label: 'Morango' },
+          { id: 'cupcake', content: '🧁', label: 'Cupcake' },
+          { id: 'boba', content: '🧋', label: 'Boba Tea' },
+          { id: 'cherry', content: '🍒', label: 'Cerejas' },
+          { id: 'cake', content: '🍰', label: 'Bolo' },
+          { id: 'tea', content: '🫖', label: 'Chá' },
+          { id: 'croissant', content: '🥐', label: 'Croissant' }
+        ]
+      },
+      {
+        id: 'magic', name: 'Brilhos & Magia', icon: '✨',
+        stickers: [
+          { id: 'sparkles', content: '✨', label: 'Brilhos' },
+          { id: 'star', content: '🌟', label: 'Estrela' },
+          { id: 'moon', content: '🌙', label: 'Lua' },
+          { id: 'wand', content: '🪄', label: 'Varinha' },
+          { id: 'cloud', content: '☁️', label: 'Nuvem' }
+        ]
+      },
+      {
+        id: 'words', name: 'Palavras & Badges', icon: '💖',
+        stickers: [
+          { id: 'w-aesthetic', content: 'Aesthetic ✨', label: 'Aesthetic', isTextBadge: true },
+          { id: 'w-dreamy', content: 'Dreamy Soul 💭', label: 'Dreamy', isTextBadge: true },
+          { id: 'w-princess', content: 'Soft Princess 👑', label: 'Princess', isTextBadge: true },
+          { id: 'w-selfcare', content: 'Self Care Day 🕯️', label: 'Self Care', isTextBadge: true },
+          { id: 'w-xoxo', content: 'XOXO 💋', label: 'XOXO', isTextBadge: true }
+        ]
+      }
+    ];
+
+    const WASHI_TAPES = [
+      { id: 'w-pink', name: 'Xadrez Vichy Rosa', color: '#FBCFE8' },
+      { id: 'w-straw', name: 'Morangos Pastel', color: '#FFE4E6' },
+      { id: 'w-lav', name: 'Lavanda Shimmer', color: '#E9D5FF' },
+      { id: 'w-mint', name: 'Menta Fresca', color: '#A7F3D0' },
+      { id: 'w-butter', name: 'Amarelo Manteiga', color: '#FEF08A' },
+      { id: 'w-sky', name: 'Céu de Algodão', color: '#BAE6FD' }
+    ];
+
+    const MOODS = [
+      { id: 'radiant', emoji: '💖', label: 'Radiante' },
+      { id: 'calm', emoji: '🌸', label: 'Tranquila' },
+      { id: 'dreamy', emoji: '✨', label: 'Sonhadora' },
+      { id: 'grateful', emoji: '🕯️', label: 'Grata' },
+      { id: 'tired', emoji: '🧸', label: 'Cansadinha' },
+      { id: 'sensitive', emoji: '🌧️', label: 'Sensível' }
+    ];
+
+    const WEATHERS = [
+      { id: 'sunny', emoji: '☀️', label: 'Ensolarado' },
+      { id: 'breeze', emoji: '🌤️', label: 'Brisa Suave' },
+      { id: 'rainy', emoji: '🌧️', label: 'Chuvinha Leve' },
+      { id: 'cloudy', emoji: '☁️', label: 'Nublado' }
+    ];
+
+    const FONTS = [
+      { id: 'caveat', name: 'Caveat (Casual)', fontClass: 'font-caveat' },
+      { id: 'dancing', name: 'Dancing Script (Cursiva)', fontClass: 'font-dancing' },
+      { id: 'sacramento', name: 'Sacramento (Romântica)', fontClass: 'font-sacramento' },
+      { id: 'patrick', name: 'Patrick Hand (Caderno)', fontClass: 'font-patrick' },
+      { id: 'kalam', name: 'Kalam (Caneta Gel)', fontClass: 'font-kalam' },
+      { id: 'comfortaa', name: 'Comfortaa (Aesthetic)', fontClass: 'font-comfortaa' },
+      { id: 'quicksand', name: 'Quicksand (Minimalista)', fontClass: 'font-quicksand' }
+    ];
+
+    const INKS = [
+      { name: 'Carvão', hex: '#373036' },
+      { name: 'Rosa Queimado', hex: '#9D4063' },
+      { name: 'Framboesa', hex: '#BE185D' },
+      { name: 'Lavanda', hex: '#6B21A8' },
+      { name: 'Chocolate', hex: '#57331D' },
+      { name: 'Verde Sálvia', hex: '#166534' }
+    ];
+
+    const INITIAL_PAGE = {
+      id: 'init-p1',
+      title: 'Meu primeiro dia no Diário Chérie 🎀✨',
+      content: `Querido diário,
+Hoje decidi começar esse cantinho para guardar meus pensamentos mais doces, minhas ideias e momentos que aquecem meu coração. 
+
+Tomei um chá quentinho de baunilha logo pela manhã enquanto olhava as flores na janela. A luz estava dourada e suave... Me senti tão calma e grata.
+
+Lembrete para mim mesma: nunca se esqueça de desacelerar, respirar fundo e apreciar as pequenas delicadezas da vida cotidiana. Você é suficiente, amada e cheia de luz.
+
+Com todo meu carinho,
+Eu mesma 💌`,
+      date: 'Segunda-feira, 14 de Setembro',
+      themeId: 'strawberry',
+      paperStyle: 'lined',
+      fontFamily: 'caveat',
+      fontSize: 22,
+      textColor: '#4A2838',
+      textAlign: 'left',
+      stickers: [
+        { id: 's1', content: '🎀', x: 82, y: 6, rotation: 12, scale: 1.4, zIndex: 5 },
+        { id: 's2', content: 'Aesthetic ✨', isTextBadge: true, x: 74, y: 84, rotation: -6, scale: 1.1, zIndex: 6 },
+        { id: 's3', content: '✨', x: 12, y: 16, rotation: -10, scale: 1.2, zIndex: 4 },
+        { id: 's4', content: '🍓', x: 85, y: 44, rotation: 15, scale: 1.3, zIndex: 4 }
+      ],
+      washiTapes: [
+        { id: 'w1', pattern: 'Xadrez Vichy Rosa', color: '#FBCFE8', x: 42, y: -8, rotation: -2, width: 130 }
+      ],
+      widgets: {
+        showMood: true, mood: 'radiant',
+        showWeather: true, weather: 'sunny',
+        showPlaylist: true, songTitle: 'Strawberry Kisses 🍓',
+        showSelfCare: true,
+        selfCareTasks: [
+          { id: '1', label: 'Beber 2L de água com hortelã', done: true, icon: '💧' },
+          { id: '2', label: 'Skincare hidratante matinal', done: true, icon: '🧴' },
+          { id: '3', label: 'Ler 15 páginas de um bom livro', done: true, icon: '📖' },
+          { id: '4', label: '5 minutos de gratidão', done: false, icon: '🕯️' }
+        ],
+        showAffirmation: true,
+        dailyAffirmation: 'Eu mereço uma vida cheia de ternura, paz e pequenos encantos.',
+        showPolaroid: true,
+        polaroidImage: 'https://images.unsplash.com/photo-1520763185298-1b434c919102?w=500&auto=format&fit=crop&q=60',
+        polaroidCaption: 'tulipas na minha escrivaninha 🌷'
+      },
+      isPublicToClub: true,
+      author: { name: 'Isa Susuki', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80', handle: '@isabelaS' },
+      likesCount: 18,
+      hasLiked: false,
+      comments: [
+        { id: 'c1', author: 'Clara Meirelles', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', text: 'Que caligrafia mais linda! Apaixonada por esse laço rosa no topo 🎀✨', timestamp: 'há 1 hora' }
+      ]
+    };
+
+    const COMMUNITY_PAGES = [
+      INITIAL_PAGE,
+      {
+        id: 'comm-p2',
+        title: 'Tarde de outono, chá de camomila e poesia 🫖🍂',
+        content: `Queridas amigas do clube, hoje foi um daqueles dias em que o vento soprava fresquinho na janela e o aroma de canela e baunilha preencheu o quarto inteiro. 
+
+Coloquei minha playlist favorita de piano lo-fi e comecei a desenhar novos selos no meu caderno. É tão mágico poder desacelerar e apenas me permitir existir no meu próprio ritmo.
+
+O autocuidado de hoje foi dizer 'não' para a correria e 'sim' para um banho quentinho com sais perfumados. 💕`,
+        date: 'Domingo, 13 de Setembro',
+        themeId: 'lavender',
+        paperStyle: 'dots',
+        fontFamily: 'dancing',
+        fontSize: 22,
+        textColor: '#3B234A',
+        textAlign: 'left',
+        stickers: [
+          { id: 'cs1', content: '🎀', x: 86, y: 8, rotation: -8, scale: 1.3, zIndex: 5 },
+          { id: 'cs2', content: '🫖', x: 80, y: 75, rotation: 10, scale: 1.4, zIndex: 4 },
+          { id: 'cs3', content: 'Dreamy Soul 💭', isTextBadge: true, x: 10, y: 86, rotation: 4, scale: 1.1, zIndex: 6 }
+        ],
+        washiTapes: [
+          { id: 'cw1', pattern: 'Lavanda Shimmer', color: '#E9D5FF', x: 35, y: -10, rotation: 3, width: 140 }
+        ],
+        widgets: {
+          showMood: true, mood: 'calm',
+          showWeather: true, weather: 'breeze',
+          showPlaylist: true, songTitle: 'Lavender Meadows 🌾',
+          showSelfCare: true,
+          selfCareTasks: [
+            { id: '1', label: 'Chá de camomila quentinho', done: true, icon: '🫖' },
+            { id: '2', label: 'Desconectar às 21h', done: true, icon: '🌙' }
+          ],
+          showAffirmation: true,
+          dailyAffirmation: 'A paz que eu procuro já habita no silêncio do meu coração.',
+          showPolaroid: true,
+          polaroidImage: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=500&auto=format&fit=crop&q=60',
+          polaroidCaption: 'minhas anotações da tarde 📖'
+        },
+        isPublicToClub: true,
+        author: { name: 'Bella Fontes', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', handle: '@bellafontes' },
+        likesCount: 42,
+        hasLiked: false,
+        comments: [
+          { id: 'c2', author: 'Mariana Duarte', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', text: 'Amei a fita de lavanda combinando com a caligrafia! Passa tanta serenidade 💜', timestamp: 'há 3 horas' }
+        ]
+      }
+    ];
+
+    // --- Main React Component ---
+    function App() {
+      const [activeTab, setActiveTab] = useState('editor');
+      const [currentTheme, setCurrentTheme] = useState(PASTEL_THEMES[0]);
+      const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+      const [showThemePicker, setShowThemePicker] = useState(false);
+
+      // Diary pages state
+      const [myPages, setMyPages] = useState(() => {
+        try {
+          const saved = localStorage.getItem('cherie_my_pages');
+          return saved ? JSON.parse(saved) : [INITIAL_PAGE];
+        } catch(e) { return [INITIAL_PAGE]; }
+      });
+
+      const [communityFeed, setCommunityFeed] = useState(() => {
+        try {
+          const saved = localStorage.getItem('cherie_community');
+          return saved ? JSON.parse(saved) : COMMUNITY_PAGES;
+        } catch(e) { return COMMUNITY_PAGES; }
+      });
+
+      const [currentPage, setCurrentPage] = useState(myPages[0] || INITIAL_PAGE);
+      const [selectedStickerId, setSelectedStickerId] = useState(null);
+      const [isStickerDrawerOpen, setIsStickerDrawerOpen] = useState(false);
+      const [activeStickerTab, setActiveStickerTab] = useState('coquette');
+      const [showWidgetsToggle, setShowWidgetsToggle] = useState(false);
+      const [showFontMenu, setShowFontMenu] = useState(false);
+      const [showInkMenu, setShowInkMenu] = useState(false);
+      const [showPaperMenu, setShowPaperMenu] = useState(false);
+      const [feedbackNotice, setFeedbackNotice] = useState(null);
+
+      // Full modal read
+      const [modalPage, setModalPage] = useState(null);
+
+      // Save to localStorage
+      useEffect(() => {
+        try {
+          localStorage.setItem('cherie_my_pages', JSON.stringify(myPages));
+        } catch(e) {}
+      }, [myPages]);
+
+      useEffect(() => {
+        try {
+          localStorage.setItem('cherie_community', JSON.stringify(communityFeed));
+        } catch(e) {}
+      }, [communityFeed]);
+
+      const triggerSparkles = () => {
+        cozyAudio.playSparkle();
+        if (window.confetti) {
+          window.confetti({
+            particleCount: 50,
+            spread: 60,
+            origin: { y: 0.7 },
+            colors: ['#F472B6', '#E9D5FF', '#FEF08A', '#BAE6FD', '#FDA4AF']
+          });
+        }
+      };
+
+      const handleSavePage = () => {
+        triggerSparkles();
+        setMyPages(prev => {
+          const idx = prev.findIndex(p => p.id === currentPage.id);
+          if (idx >= 0) {
+            const updated = [...prev];
+            updated[idx] = currentPage;
+            return updated;
+          }
+          return [currentPage, ...prev];
+        });
+        setFeedbackNotice('Página salva com carinho no seu diário! 🌸');
+        setTimeout(() => setFeedbackNotice(null), 3000);
+      };
+
+      const handleShareToClub = () => {
+        triggerSparkles();
+        const shared = {
+          ...currentPage,
+          isPublicToClub: true,
+          author: { name: 'Isa Susuki', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80', handle: '@isabelaS' }
+        };
+        handleSavePage();
+        setCommunityFeed(prev => {
+          const idx = prev.findIndex(p => p.id === shared.id);
+          if (idx >= 0) {
+            const updated = [...prev];
+            updated[idx] = shared;
+            return updated;
+          }
+          return [shared, ...prev];
+        });
+        setFeedbackNotice('Página postada no Feed Privado do Clube! 💌✨');
+        setTimeout(() => setFeedbackNotice(null), 3000);
+      };
+
+      const handleNewPage = () => {
+        const newP = {
+          id: 'p-' + Date.now(),
+          title: 'Minhas anotações doces de hoje 🌸',
+          content: '',
+          date: 'Segunda-feira, 14 de Setembro',
+          themeId: currentTheme.id,
+          paperStyle: 'lined',
+          fontFamily: 'caveat',
+          fontSize: 22,
+          textColor: '#4A2838',
+          textAlign: 'left',
+          stickers: [
+            { id: 's-' + Date.now(), content: '🎀', x: 84, y: 8, rotation: 8, scale: 1.3, zIndex: 4 }
+          ],
+          washiTapes: [
+            { id: 'w-' + Date.now(), pattern: 'Xadrez Vichy Rosa', color: '#FBCFE8', x: 40, y: -10, rotation: -2, width: 120 }
+          ],
+          widgets: {
+            showMood: true, mood: 'radiant',
+            showWeather: true, weather: 'sunny',
+            showPlaylist: true, songTitle: 'Strawberry Kisses 🍓',
+            showSelfCare: true,
+            selfCareTasks: [
+              { id: '1', label: 'Beber 2L de água fresca', done: false, icon: '💧' },
+              { id: '2', label: 'Skincare hidratante', done: false, icon: '🧴' },
+              { id: '3', label: '15 minutos de leitura', done: false, icon: '📖' },
+              { id: '4', label: 'Escrever no diário com calma', done: true, icon: '✍️' }
+            ],
+            showAffirmation: true,
+            dailyAffirmation: 'Eu mereço viver cada instante com leveza e gentileza.',
+            showPolaroid: false
+          },
+          isPublicToClub: false,
+          author: { name: 'Isa Susuki', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80', handle: '@isabelaS' },
+          likesCount: 0, hasLiked: false, comments: []
+        };
+        setCurrentPage(newP);
+        setActiveTab('editor');
+      };
+
+      const addSticker = (stk) => {
+        cozyAudio.playCutePop();
+        const newStk = {
+          id: 'stk-' + Date.now(),
+          content: stk.content,
+          isTextBadge: stk.isTextBadge,
+          x: Math.max(10, Math.min(80, 50 + (Math.random() - 0.5) * 20)),
+          y: Math.max(15, Math.min(75, 40 + (Math.random() - 0.5) * 20)),
+          rotation: Math.floor((Math.random() - 0.5) * 24),
+          scale: 1.2,
+          zIndex: (currentPage.stickers?.length || 0) + 2
+        };
+        setCurrentPage(prev => ({
+          ...prev,
+          stickers: [...(prev.stickers || []), newStk]
+        }));
+        setSelectedStickerId(newStk.id);
+      };
+
+      const addWashi = (washi) => {
+        cozyAudio.playCutePop();
+        const newW = {
+          id: 'washi-' + Date.now(),
+          pattern: washi.name,
+          color: washi.color,
+          x: Math.floor(Math.random() * 50) + 20,
+          y: -10,
+          rotation: Math.floor((Math.random() - 0.5) * 8),
+          width: 130
+        };
+        setCurrentPage(prev => ({
+          ...prev,
+          washiTapes: [...(prev.washiTapes || []), newW]
+        }));
+      };
+
+      const updateSticker = (id, props) => {
+        setCurrentPage(prev => ({
+          ...prev,
+          stickers: prev.stickers.map(s => s.id === id ? { ...s, ...props } : s)
+        }));
+      };
+
+      const deleteSticker = (id) => {
+        setCurrentPage(prev => ({
+          ...prev,
+          stickers: prev.stickers.filter(s => s.id !== id)
+        }));
+        if (selectedStickerId === id) setSelectedStickerId(null);
+      };
+
+      const toggleLike = (postId) => {
+        cozyAudio.playSparkle();
+        if (window.confetti) {
+          window.confetti({ particleCount: 25, spread: 45, origin: { y: 0.8 }, colors: ['#F472B6', '#FDA4AF'] });
+        }
+        setCommunityFeed(prev => prev.map(p => {
+          if (p.id === postId) {
+            const liked = !p.hasLiked;
+            return {
+              ...p,
+              hasLiked: liked,
+              likesCount: liked ? (p.likesCount || 0) + 1 : Math.max(0, (p.likesCount || 0) - 1)
+            };
+          }
+          return p;
+        }));
+      };
+
+      const addComment = (postId, text) => {
+        if (!text.trim()) return;
+        cozyAudio.playCutePop();
+        const comm = {
+          id: 'c-' + Date.now(),
+          author: 'Isa Susuki',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+          text: text.trim(),
+          timestamp: 'agora mesmo'
+        };
+        setCommunityFeed(prev => prev.map(p => {
+          if (p.id === postId) {
+            return { ...p, comments: [...(p.comments || []), comm] };
+          }
+          return p;
+        }));
+      };
+
+      // Current font class
+      const currentFontClass = FONTS.find(f => f.id === currentPage.fontFamily)?.fontClass || 'font-caveat';
+
+      return (
+        <div className={`min-h-screen ${currentTheme.bgApp} flex flex-col font-quicksand transition-colors duration-300`}>
+          
+          {/* Top Bar */}
+          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-rose-100 shadow-sm">
+            <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+              <div 
+                onClick={() => setActiveTab('editor')}
+                className="flex items-center gap-2.5 cursor-pointer select-none"
+              >
+                <div className="w-10 h-10 rounded-2xl bg-rose-100 border border-rose-200 flex items-center justify-center text-xl shadow-xs">
+                  🎀
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-playfair font-bold text-lg text-gray-800">Diário Chérie</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-bold hidden sm:inline-block">Aesthetic & Girly</span>
+                  </div>
+                  <p className="text-[11px] text-gray-400 hidden md:block">Seu cantinho aconchegante de memórias e diários decorados</p>
+                </div>
+              </div>
+
+              {/* Navigation Tabs */}
+              <nav className="flex items-center bg-rose-50/80 p-1 rounded-2xl border border-rose-100">
+                <button
+                  onClick={() => { cozyAudio.playCutePop(); setActiveTab('editor'); }}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'editor' ? 'bg-white text-rose-600 shadow-xs' : 'text-gray-500 hover:text-rose-500'
+                  }`}
+                >
+                  📖 Escrever
+                </button>
+                <button
+                  onClick={() => { cozyAudio.playCutePop(); setActiveTab('pages'); }}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'pages' ? 'bg-white text-rose-600 shadow-xs' : 'text-gray-500 hover:text-rose-500'
+                  }`}
+                >
+                  📚 Minhas Páginas ({myPages.length})
+                </button>
+                <button
+                  onClick={() => { cozyAudio.playCutePop(); setActiveTab('community'); }}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    activeTab === 'community' ? 'bg-white text-purple-600 shadow-xs' : 'text-gray-500 hover:text-purple-500'
+                  }`}
+                >
+                  💌 Feed do Clube 🔒
+                </button>
+              </nav>
+
+              {/* Right Tools */}
+              <div className="flex items-center gap-2">
+                {/* Lo-Fi Music button */}
+                <button
+                  onClick={() => {
+                    const pl = cozyAudio.toggleAmbientLofi(st => setIsPlayingAudio(st));
+                    setIsPlayingAudio(pl);
+                  }}
+                  className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all ${
+                    isPlayingAudio ? 'bg-rose-100 border-rose-300 text-rose-700 animate-pulse' : 'bg-white border-rose-100 text-gray-500 hover:bg-rose-50'
+                  }`}
+                >
+                  <span>🎵</span>
+                  <span className="hidden sm:inline">{isPlayingAudio ? 'Tocando Lo-Fi' : 'Música'}</span>
+                </button>
+
+                {/* Theme Selector */}
+                <div className="relative">
+                  <button
+                    onClick={() => setShowThemePicker(!showThemePicker)}
+                    className="px-2.5 py-1.5 rounded-xl bg-white border border-rose-100 text-gray-600 hover:bg-rose-50 text-xs font-bold flex items-center gap-1.5 shadow-2xs"
+                  >
+                    <span>🎨</span>
+                    <span className="hidden sm:inline">{currentTheme.badge}</span>
+                  </button>
+
+                  {showThemePicker && (
+                    <>
+                      <div className="fixed inset-0 z-30" onClick={() => setShowThemePicker(false)} />
+                      <div className="absolute right-0 top-10 bg-white p-2 rounded-2xl shadow-xl border border-rose-100 z-40 w-52 space-y-1">
+                        <p className="px-2 py-1 text-[10px] font-bold text-gray-400 uppercase">Paletas Pastéis 🌸</p>
+                        {PASTEL_THEMES.map(th => (
+                          <button
+                            key={th.id}
+                            onClick={() => { cozyAudio.playCutePop(); setCurrentTheme(th); setShowThemePicker(false); }}
+                            className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-bold text-left ${
+                              currentTheme.id === th.id ? 'bg-rose-50 text-rose-700' : 'text-gray-600 hover:bg-rose-50/50'
+                            }`}
+                          >
+                            <span className="w-3 h-3 rounded-full border border-black/10" style={{ backgroundColor: th.accent }} />
+                            <span>{th.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {/* Feedback Toast */}
+          {feedbackNotice && (
+            <div className="max-w-md mx-auto my-3 px-4 py-2 bg-pink-100 border border-pink-200 text-rose-800 text-xs font-bold rounded-2xl shadow-xs text-center flex items-center justify-center gap-2">
+              <span>🎀</span>
+              <span>{feedbackNotice}</span>
+            </div>
+          )}
+
+          {/* Main Content */}
+          <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-6">
+
+            {/* TAB: EDITOR */}
+            {activeTab === 'editor' && (
+              <div className="space-y-4">
+                {/* Editor Control Toolbar */}
+                <div className="bg-white/95 rounded-3xl p-3 border border-rose-100 shadow-sm flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {/* Font Dropdown */}
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowFontMenu(!showFontMenu)}
+                        className="px-2.5 py-1.5 rounded-xl border border-rose-100 bg-rose-50/50 hover:bg-rose-100/60 text-xs font-bold text-gray-700 flex items-center gap-1"
+                      >
+                        <span>✍️</span>
+                        <span>{FONTS.find(f => f.id === currentPage.fontFamily)?.name.split(' ')[0]}</span>
+                      </button>
+
+                      {showFontMenu && (
+                        <>
+                          <div className="fixed inset-0 z-30" onClick={() => setShowFontMenu(false)} />
+                          <div className="absolute left-0 top-10 bg-white p-2 rounded-2xl shadow-xl border border-rose-100 z-40 w-56 space-y-1">
+                            <p className="px-2 py-1 text-[10px] font-bold text-gray-400 uppercase">Fontes Manuscritas</p>
+                            {FONTS.map(f => (
+                              <button
+                                key={f.id}
+                                onClick={() => { cozyAudio.playCutePop(); setCurrentPage(prev => ({ ...prev, fontFamily: f.id })); setShowFontMenu(false); }}
+                                className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-bold ${
+                                  currentPage.fontFamily === f.id ? 'bg-rose-50 text-rose-800' : 'hover:bg-rose-50/50 text-gray-700'
+                                }`}
+                              >
+                                {f.name}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Font Size +/- */}
+                    <div className="flex items-center bg-rose-50/60 rounded-xl border border-rose-100 p-0.5 text-xs">
+                      <button
+                        onClick={() => setCurrentPage(prev => ({ ...prev, fontSize: Math.max(16, prev.fontSize - 2) }))}
+                        className="px-2 py-1 font-bold text-gray-600 hover:bg-white rounded-lg"
+                      >A-</button>
+                      <span className="px-1.5 font-bold text-gray-700">{currentPage.fontSize}</span>
+                      <button
+                        onClick={() => setCurrentPage(prev => ({ ...prev, fontSize: Math.min(36, prev.fontSize + 2) }))}
+                        className="px-2 py-1 font-bold text-gray-600 hover:bg-white rounded-lg"
+                      >A+</button>
+                    </div>
+
+                    {/* Ink Color Picker */}
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowInkMenu(!showInkMenu)}
+                        className="p-1.5 rounded-xl border border-rose-100 bg-rose-50/50 hover:bg-rose-100/60 flex items-center gap-1 text-xs"
+                      >
+                        <span className="w-4 h-4 rounded-full border border-black/10 inline-block" style={{ backgroundColor: currentPage.textColor }} />
+                        <span>🎨</span>
+                      </button>
+
+                      {showInkMenu && (
+                        <>
+                          <div className="fixed inset-0 z-30" onClick={() => setShowInkMenu(false)} />
+                          <div className="absolute left-0 top-10 bg-white p-3 rounded-2xl shadow-xl border border-rose-100 z-40 w-48 space-y-2">
+                            <p className="text-[10px] font-bold text-gray-400 uppercase">Cores de Caneta</p>
+                            <div className="grid grid-cols-3 gap-2">
+                              {INKS.map(ink => (
+                                <button
+                                  key={ink.hex}
+                                  onClick={() => { cozyAudio.playCutePop(); setCurrentPage(prev => ({ ...prev, textColor: ink.hex })); setShowInkMenu(false); }}
+                                  style={{ backgroundColor: ink.hex }}
+                                  className="w-8 h-8 rounded-full border-2 border-white shadow-xs hover:scale-110 transition-transform"
+                                  title={ink.name}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Paper Style Selector */}
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowPaperMenu(!showPaperMenu)}
+                        className="px-2.5 py-1.5 rounded-xl border border-rose-100 bg-rose-50/50 hover:bg-rose-100/60 text-xs font-bold text-gray-700 flex items-center gap-1"
+                      >
+                        <span>📜</span>
+                        <span className="capitalize">{currentPage.paperStyle}</span>
+                      </button>
+
+                      {showPaperMenu && (
+                        <>
+                          <div className="fixed inset-0 z-30" onClick={() => setShowPaperMenu(false)} />
+                          <div className="absolute left-0 top-10 bg-white p-2 rounded-2xl shadow-xl border border-rose-100 z-40 w-44 space-y-1">
+                            <p className="px-2 py-1 text-[10px] font-bold text-gray-400 uppercase">Estilo da Folha</p>
+                            {[
+                              { id: 'lined', label: 'Pautado Rosa' },
+                              { id: 'grid', label: 'Quadriculado' },
+                              { id: 'dots', label: 'Pontilhado' },
+                              { id: 'kraft', label: 'Papel Kraft' },
+                              { id: 'plain', label: 'Liso Suave' }
+                            ].map(p => (
+                              <button
+                                key={p.id}
+                                onClick={() => { cozyAudio.playCutePop(); setCurrentPage(prev => ({ ...prev, paperStyle: p.id })); setShowPaperMenu(false); }}
+                                className="w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-50 text-gray-700"
+                              >
+                                {p.label}
+                              </button>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right Actions */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {/* Sticker Drawer button */}
+                    <button
+                      onClick={() => { cozyAudio.playCutePop(); setIsStickerDrawerOpen(true); }}
+                      className="px-3 py-1.5 rounded-xl bg-pink-100 hover:bg-pink-200 text-rose-800 text-xs font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      <span>🎀</span>
+                      <span>Adesivos & Fitas</span>
+                    </button>
+
+                    {/* Widgets Toggle button */}
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowWidgetsToggle(!showWidgetsToggle)}
+                        className="px-2.5 py-1.5 rounded-xl border border-rose-100 bg-rose-50/50 hover:bg-rose-100/60 text-xs font-bold text-gray-700 flex items-center gap-1"
+                      >
+                        <span>⚙️</span>
+                        <span>Widgets</span>
+                      </button>
+
+                      {showWidgetsToggle && (
+                        <>
+                          <div className="fixed inset-0 z-30" onClick={() => setShowWidgetsToggle(false)} />
+                          <div className="absolute right-0 top-10 bg-white p-3 rounded-2xl shadow-xl border border-rose-100 z-40 w-56 space-y-2">
+                            <p className="text-[10px] font-bold text-gray-400 uppercase">Personalizar Widgets</p>
+                            {[
+                              { key: 'showMood', label: 'Humor do Dia', icon: '💖' },
+                              { key: 'showWeather', label: 'Clima & Céu', icon: '🌤️' },
+                              { key: 'showPlaylist', label: 'Tocando Agora', icon: '🎵' },
+                              { key: 'showSelfCare', label: 'Autocuidado', icon: '🕯️' },
+                              { key: 'showPolaroid', label: 'Foto Polaroid', icon: '📷' },
+                              { key: 'showAffirmation', label: 'Afirmação Positiva', icon: '💌' }
+                            ].map(w => (
+                              <label key={w.key} className="flex items-center justify-between p-1.5 rounded-xl hover:bg-rose-50 text-xs font-semibold text-gray-700 cursor-pointer">
+                                <span>{w.icon} {w.label}</span>
+                                <input
+                                  type="checkbox"
+                                  checked={Boolean(currentPage.widgets?.[w.key])}
+                                  onChange={e => setCurrentPage(prev => ({
+                                    ...prev,
+                                    widgets: { ...prev.widgets, [w.key]: e.target.checked }
+                                  }))}
+                                  className="accent-rose-500"
+                                />
+                              </label>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* New Page */}
+                    <button
+                      onClick={() => { cozyAudio.playCutePop(); if (confirm('Criar uma nova folha em branco? Lembre de salvar a atual se desejar.')) handleNewPage(); }}
+                      className="p-1.5 rounded-xl border border-rose-100 bg-white hover:bg-rose-50 text-gray-600 text-xs font-bold"
+                      title="Nova folha limpa"
+                    >
+                      ➕
+                    </button>
+
+                    {/* Save */}
+                    <button
+                      onClick={handleSavePage}
+                      className="px-3.5 py-1.5 rounded-xl bg-white border border-rose-200 text-rose-700 hover:bg-rose-50 text-xs font-bold shadow-xs"
+                    >
+                      💾 Salvar
+                    </button>
+
+                    {/* Share */}
+                    <button
+                      onClick={handleShareToClub}
+                      className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 text-xs font-bold shadow-sm"
+                    >
+                      💌 Postar no Clube
+                    </button>
+                  </div>
+                </div>
+
+                {/* Physical Paper Canvas */}
+                <div className="relative rounded-3xl shadow-xl border-2 border-rose-100 bg-white/40 p-3 overflow-visible">
+                  {/* Spiral rings at top */}
+                  <div className="absolute -top-3 left-12 right-12 flex justify-between px-4 z-30 pointer-events-none">
+                    {[1,2,3,4,5,6,7,8].map(i => (
+                      <div key={i} className="w-2.5 h-6 bg-gradient-to-b from-rose-200 via-rose-300 to-rose-400 rounded-full shadow-xs border border-rose-300/80" />
+                    ))}
+                  </div>
+
+                  {/* Paper Sheet */}
+                  <div 
+                    onClick={() => setSelectedStickerId(null)}
+                    className={`relative min-h-[600px] rounded-2xl p-6 sm:p-10 shadow-inner border border-rose-100/70 overflow-hidden paper-${currentPage.paperStyle}`}
+                    style={{ color: currentPage.textColor }}
+                  >
+                    {/* Washi Tapes */}
+                    {currentPage.washiTapes?.map(tape => (
+                      <div
+                        key={tape.id}
+                        style={{ left: `${tape.x}%`, top: `${tape.y}px`, transform: `rotate(${tape.rotation}deg)`, width: `${tape.width}px`, backgroundColor: tape.color }}
+                        className="absolute h-6 z-20 shadow-xs opacity-90 washi-tape-strip flex items-center justify-between px-2 cursor-pointer group"
+                      >
+                        <div className="w-1.5 h-full bg-white/30" />
+                        <span className="text-[9px] font-bold uppercase text-black/40 truncate">{tape.pattern}</span>
+                        <div className="w-1.5 h-full bg-white/30" />
+                        <button
+                          onClick={e => { e.stopPropagation(); setCurrentPage(prev => ({ ...prev, washiTapes: prev.washiTapes.filter(t => t.id !== tape.id) })); }}
+                          className="absolute -top-5 left-1/2 -translate-x-1/2 hidden group-hover:block bg-white p-0.5 rounded-full text-red-500 text-[10px]"
+                        >✕</button>
+                      </div>
+                    ))}
+
+                    {/* Header Date & Author */}
+                    <div className="flex items-center justify-between pb-3 border-b border-rose-200/50 mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">🌸</span>
+                        <input
+                          type="text"
+                          value={currentPage.date}
+                          onChange={e => setCurrentPage(prev => ({ ...prev, date: e.target.value }))}
+                          className="font-bold text-xs sm:text-sm text-gray-600 bg-transparent border-b border-transparent focus:border-rose-400 focus:outline-none"
+                        />
+                      </div>
+                      <span className="text-xs text-gray-500 font-medium">Por {currentPage.author?.name || 'Isa'}</span>
+                    </div>
+
+                    {/* Widgets Section */}
+                    <div className="space-y-3 mb-4 select-none">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {/* Mood */}
+                        {currentPage.widgets?.showMood && (
+                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-pink-200 bg-pink-50 text-rose-800 text-xs font-bold">
+                            <span>{MOODS.find(m => m.id === currentPage.widgets.mood)?.emoji || '💖'}</span>
+                            <span>Humor: {MOODS.find(m => m.id === currentPage.widgets.mood)?.label || 'Radiante'}</span>
+                          </div>
+                        )}
+
+                        {/* Weather */}
+                        {currentPage.widgets?.showWeather && (
+                          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-sky-200 bg-sky-50 text-sky-800 text-xs font-bold">
+                            <span>{WEATHERS.find(w => w.id === currentPage.widgets.weather)?.emoji || '☀️'}</span>
+                            <span>{WEATHERS.find(w => w.id === currentPage.widgets.weather)?.label || 'Ensolarado'}</span>
+                          </div>
+                        )}
+
+                        {/* Lo-Fi Music Card */}
+                        {currentPage.widgets?.showPlaylist && (
+                          <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-purple-200 bg-purple-50 text-purple-900 text-xs font-bold">
+                            <span className="animate-spin text-sm">💿</span>
+                            <span>{currentPage.widgets.songTitle || 'Strawberry Kisses 🍓'}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Polaroid and Self Care */}
+                      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-start">
+                        {currentPage.widgets?.showPolaroid && (
+                          <div className="md:col-span-5 bg-white p-2 pb-3 rounded-xl shadow-md border border-rose-100 max-w-[220px] mx-auto md:mx-0 rotate-[-1.5deg]">
+                            <div className="w-full h-32 rounded-lg overflow-hidden bg-rose-50 border border-gray-100">
+                              <img src={currentPage.widgets.polaroidImage || 'https://images.unsplash.com/photo-1520763185298-1b434c919102?w=500&auto=format&fit=crop&q=60'} alt="Polaroid" className="w-full h-full object-cover" />
+                            </div>
+                            <input
+                              type="text"
+                              value={currentPage.widgets.polaroidCaption || ''}
+                              onChange={e => setCurrentPage(prev => ({ ...prev, widgets: { ...prev.widgets, polaroidCaption: e.target.value } }))}
+                              placeholder="Legenda da foto..."
+                              className="w-full mt-2 text-center font-caveat text-sm text-gray-700 bg-transparent border-b border-dashed border-rose-200 focus:outline-none"
+                            />
+                          </div>
+                        )}
+
+                        {currentPage.widgets?.showSelfCare && (
+                          <div className={`${currentPage.widgets?.showPolaroid ? 'md:col-span-7' : 'md:col-span-12'} bg-white/80 p-3 rounded-2xl border border-rose-200 shadow-2xs space-y-2`}>
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-xs text-rose-900">🕯️ Autocuidado do Dia</span>
+                              <span className="text-[10px] bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-bold">
+                                {currentPage.widgets.selfCareTasks?.filter(t => t.done).length} / {currentPage.widgets.selfCareTasks?.length} feitos 💖
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                              {currentPage.widgets.selfCareTasks?.map(t => (
+                                <div
+                                  key={t.id}
+                                  onClick={() => {
+                                    cozyAudio.playCutePop();
+                                    setCurrentPage(prev => ({
+                                      ...prev,
+                                      widgets: {
+                                        ...prev.widgets,
+                                        selfCareTasks: prev.widgets.selfCareTasks.map(tk => tk.id === t.id ? { ...tk, done: !tk.done } : tk)
+                                      }
+                                    }));
+                                  }}
+                                  className={`flex items-center gap-2 p-1.5 rounded-xl border text-xs cursor-pointer ${
+                                    t.done ? 'bg-rose-50 border-rose-200 text-rose-800 line-through opacity-85' : 'bg-white border-rose-100 text-gray-700'
+                                  }`}
+                                >
+                                  <span>{t.done ? '✅' : '⚪'}</span>
+                                  <span className="truncate">{t.icon} {t.label}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Affirmation */}
+                      {currentPage.widgets?.showAffirmation && (
+                        <div className="p-2.5 rounded-2xl bg-amber-50/80 border border-amber-200 flex items-center gap-2">
+                          <span className="text-lg">💌</span>
+                          <input
+                            type="text"
+                            value={currentPage.widgets.dailyAffirmation || ''}
+                            onChange={e => setCurrentPage(prev => ({ ...prev, widgets: { ...prev.widgets, dailyAffirmation: e.target.value } }))}
+                            placeholder="Afirmação do dia..."
+                            className="w-full font-dancing text-base sm:text-lg text-amber-950 italic bg-transparent border-b border-dashed border-amber-300 focus:outline-none"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Title */}
+                    <div className="mb-4">
+                      <input
+                        type="text"
+                        value={currentPage.title}
+                        onChange={e => setCurrentPage(prev => ({ ...prev, title: e.target.value }))}
+                        placeholder="Título da página..."
+                        className={`w-full ${currentFontClass} font-bold text-2xl sm:text-3xl leading-snug bg-transparent border-b border-dashed border-rose-200 focus:border-rose-400 focus:outline-none py-1`}
+                        style={{ textAlign: currentPage.textAlign, color: currentPage.textColor }}
+                      />
+                    </div>
+
+                    {/* Text Body */}
+                    <div className="relative mb-6">
+                      <textarea
+                        value={currentPage.content}
+                        onChange={e => setCurrentPage(prev => ({ ...prev, content: e.target.value }))}
+                        placeholder="Querido diário... escreva seus pensamentos e segredos aqui..."
+                        rows={12}
+                        className={`w-full ${currentFontClass} leading-relaxed bg-transparent border-none focus:outline-none resize-none`}
+                        style={{ fontSize: `${currentPage.fontSize}px`, textAlign: currentPage.textAlign, color: currentPage.textColor }}
+                      />
+                    </div>
+
+                    {/* Draggable Stickers Overlay */}
+                    {currentPage.stickers?.map(stk => (
+                      <div
+                        key={stk.id}
+                        onClick={e => { e.stopPropagation(); setSelectedStickerId(stk.id); }}
+                        style={{
+                          left: `${stk.x}%`,
+                          top: `${stk.y}%`,
+                          transform: `rotate(${stk.rotation}deg) scale(${stk.scale})`,
+                          zIndex: stk.zIndex
+                        }}
+                        className={`absolute select-none cursor-grab active:cursor-grabbing ${
+                          selectedStickerId === stk.id ? 'ring-2 ring-rose-400 rounded-xl bg-white/40' : 'hover:scale-105'
+                        }`}
+                      >
+                        {stk.isTextBadge ? (
+                          <div className="px-3 py-1 rounded-full font-bold text-xs bg-white text-rose-800 border border-rose-200 shadow-xs whitespace-nowrap">
+                            {stk.content}
+                          </div>
+                        ) : (
+                          <div className="text-4xl sm:text-5xl filter drop-shadow-sm select-none">
+                            {stk.content}
+                          </div>
+                        )}
+
+                        {/* Controls if selected */}
+                        {selectedStickerId === stk.id && (
+                          <div 
+                            onClick={e => e.stopPropagation()}
+                            className="absolute -top-9 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-white border border-rose-200 rounded-full px-2 py-0.5 shadow-lg z-50 text-xs"
+                          >
+                            <button
+                              onClick={() => { cozyAudio.playCutePop(); updateSticker(stk.id, { rotation: (stk.rotation + 15) % 360 }); }}
+                              className="p-1 hover:bg-rose-100 rounded-full text-rose-600"
+                              title="Girar"
+                            >🔄</button>
+                            <button
+                              onClick={() => { cozyAudio.playCutePop(); updateSticker(stk.id, { scale: Math.min(2.5, stk.scale + 0.15) }); }}
+                              className="p-1 hover:bg-rose-100 rounded-full text-rose-600"
+                              title="Aumentar"
+                            >🔍+</button>
+                            <button
+                              onClick={() => { cozyAudio.playCutePop(); updateSticker(stk.id, { scale: Math.max(0.6, stk.scale - 0.15) }); }}
+                              className="p-1 hover:bg-rose-100 rounded-full text-rose-600"
+                              title="Diminuir"
+                            >🔍-</button>
+                            <button
+                              onClick={() => deleteSticker(stk.id)}
+                              className="p-1 hover:bg-red-100 rounded-full text-red-500"
+                              title="Remover"
+                            >🗑️</button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                    <div className="mt-6 pt-4 border-t border-rose-200/40 flex items-center justify-between text-xs text-rose-300 font-quicksand">
+                      <span>✨ Diário Chérie</span>
+                      <span className="font-dancing text-sm text-rose-400">amor próprio & doçura</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: MY PAGES */}
+            {activeTab === 'pages' && (
+              <div className="space-y-5">
+                <div className="flex items-center justify-between bg-white p-5 rounded-3xl border border-rose-100 shadow-xs">
+                  <div>
+                    <h2 className="font-playfair font-bold text-xl text-gray-800">Meu Caderno de Memórias 📚</h2>
+                    <p className="text-xs text-gray-500">Você tem {myPages.length} {myPages.length === 1 ? 'página salva' : 'páginas salvas'}</p>
+                  </div>
+                  <button
+                    onClick={handleNewPage}
+                    className="px-4 py-2 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm"
+                  >
+                    <span>➕</span>
+                    <span>Nova Página</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {myPages.map(page => (
+                    <div key={page.id} className="bg-white rounded-3xl border border-rose-200 p-5 flex flex-col justify-between shadow-xs hover:shadow-md transition-all">
+                      <div>
+                        <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+                          <span>📅 {page.date}</span>
+                          <span className="text-rose-500 font-bold">✨ {page.stickers?.length || 0} adesivos</span>
+                        </div>
+                        <h3 className="font-playfair font-bold text-lg text-gray-800 line-clamp-1">{page.title}</h3>
+                        <p className="font-caveat text-xl text-gray-600 line-clamp-3 my-2">{page.content || 'Página sem texto...'}</p>
+                      </div>
+
+                      <div className="pt-3 border-t border-rose-100 flex items-center justify-between mt-3">
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => { cozyAudio.playCutePop(); setCurrentPage(page); setActiveTab('editor'); }}
+                            className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs"
+                          >
+                            ✏️ Editar
+                          </button>
+                          <button
+                            onClick={() => {
+                              setCurrentPage(page);
+                              handleShareToClub();
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs"
+                          >
+                            💌 Postar
+                          </button>
+                        </div>
+                        <button
+                          onClick={() => {
+                            if (confirm('Deseja excluir esta página do seu diário?')) {
+                              setMyPages(prev => prev.filter(p => p.id !== page.id));
+                              if (currentPage.id === page.id) handleNewPage();
+                            }
+                          }}
+                          className="p-1.5 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-xl"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* TAB: COMMUNITY FEED */}
+            {activeTab === 'community' && (
+              <div className="space-y-6">
+                <div className="bg-gradient-to-r from-purple-100 via-pink-100 to-rose-100 p-6 rounded-3xl border border-rose-200 text-center relative overflow-hidden">
+                  <span className="inline-block px-3 py-1 rounded-full bg-white/80 border border-purple-200 text-purple-700 font-bold text-xs mb-2">
+                    🔒 Círculo Íntimo & Feed Privado
+                  </span>
+                  <h2 className="font-playfair font-bold text-2xl sm:text-3xl text-gray-800">Clube Secreto das Garotas 🌸</h2>
+                  <p className="text-xs sm:text-sm text-gray-600 max-w-md mx-auto mt-1">
+                    Um feed seguro onde compartilhamos nossas páginas decoradas, carinho e inspiração mútua.
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  {communityFeed.map(post => (
+                    <article key={post.id} className="bg-white rounded-3xl border border-rose-200 shadow-xs overflow-hidden">
+                      {/* Author */}
+                      <div className="p-4 sm:p-5 flex items-center justify-between border-b border-rose-100">
+                        <div className="flex items-center gap-3">
+                          <img src={post.author?.avatar} alt={post.author?.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-rose-200" />
+                          <div>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-bold text-sm text-gray-800">{post.author?.name}</span>
+                              <span className="text-xs text-gray-400">{post.author?.handle}</span>
+                            </div>
+                            <span className="text-[11px] text-gray-400">{post.date} • Feed Privado 💌</span>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => { cozyAudio.playCutePop(); setModalPage(post); }}
+                          className="px-3 py-1.5 rounded-xl border border-rose-200 hover:bg-rose-50 text-rose-700 text-xs font-bold"
+                        >
+                          📖 Ver Folha
+                        </button>
+                      </div>
+
+                      {/* Content Preview */}
+                      <div className="p-5 bg-rose-50/20">
+                        <div className="bg-white p-5 rounded-2xl border border-rose-100 space-y-3">
+                          <h3 className="font-playfair font-bold text-xl text-gray-800">{post.title}</h3>
+                          <p className="font-caveat text-2xl text-gray-700 line-clamp-3 leading-relaxed">{post.content}</p>
+
+                          {/* Stickers tags */}
+                          {post.stickers?.length > 0 && (
+                            <div className="flex flex-wrap gap-1.5 pt-2 border-t border-rose-100">
+                              <span className="text-[10px] font-bold uppercase text-gray-400">Adesivos:</span>
+                              {post.stickers.map((s, idx) => (
+                                <span key={idx} className="text-lg p-1 bg-rose-50 rounded-lg border border-rose-100">{s.content}</span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Likes & Comments */}
+                      <div className="p-4 border-t border-rose-100 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => toggleLike(post.id)}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
+                              post.hasLiked ? 'bg-rose-100 text-rose-700' : 'bg-rose-50 text-gray-600 hover:bg-rose-100'
+                            }`}
+                          >
+                            <span>{post.hasLiked ? '💖' : '🤍'}</span>
+                            <span>{post.likesCount || 0} Corações</span>
+                          </button>
+                          <span className="text-xs text-gray-500 font-bold">💬 {post.comments?.length || 0} Comentários</span>
+                        </div>
+
+                        <button
+                          onClick={() => { cozyAudio.playCutePop(); setCurrentPage(post); setActiveTab('editor'); }}
+                          className="text-xs text-rose-600 hover:underline font-bold"
+                        >
+                          ✨ Copiar Estilo
+                        </button>
+                      </div>
+
+                      {/* Comments stream */}
+                      <div className="p-4 bg-rose-50/40 border-t border-rose-100 space-y-2">
+                        {post.comments?.map(c => (
+                          <div key={c.id} className="flex items-start gap-2 bg-white p-2 rounded-xl text-xs border border-rose-100">
+                            <img src={c.avatar} alt={c.author} className="w-6 h-6 rounded-full object-cover" />
+                            <div>
+                              <span className="font-bold text-gray-800">{c.author}: </span>
+                              <span className="text-gray-600">{c.text}</span>
+                            </div>
+                          </div>
+                        ))}
+
+                        <div className="flex items-center gap-2 pt-1">
+                          <input
+                            type="text"
+                            placeholder="Deixe um carinho para a autora..."
+                            onKeyDown={e => {
+                              if (e.key === 'Enter' && e.target.value) {
+                                addComment(post.id, e.target.value);
+                                e.target.value = '';
+                              }
+                            }}
+                            className="flex-1 px-3 py-1.5 rounded-xl border border-rose-200 text-xs bg-white focus:outline-none"
+                          />
+                          <span className="text-[10px] text-gray-400 font-bold">Pressione Enter</span>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* Sticker & Washi Drawer Modal */}
+          {isStickerDrawerOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-xs">
+              <div className="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-rose-100 space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-rose-100">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">🎀</span>
+                    <h3 className="font-playfair font-bold text-gray-800 text-base">Estojo de Adesivos & Fitas</h3>
+                  </div>
+                  <button onClick={() => setIsStickerDrawerOpen(false)} className="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+                </div>
+
+                {/* Categories */}
+                <div className="flex items-center gap-1 overflow-x-auto pb-2">
+                  {STICKER_CATEGORIES.map(cat => (
+                    <button
+                      key={cat.id}
+                      onClick={() => { cozyAudio.playCutePop(); setActiveStickerTab(cat.id); }}
+                      className={`shrink-0 px-2.5 py-1 rounded-xl text-xs font-bold ${
+                        activeStickerTab === cat.id ? 'bg-rose-500 text-white shadow-xs' : 'bg-rose-50 text-gray-600'
+                      }`}
+                    >
+                      {cat.icon} {cat.name}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => { cozyAudio.playCutePop(); setActiveStickerTab('washi'); }}
+                    className={`shrink-0 px-2.5 py-1 rounded-xl text-xs font-bold ${
+                      activeStickerTab === 'washi' ? 'bg-rose-500 text-white shadow-xs' : 'bg-rose-50 text-gray-600'
+                    }`}
+                  >
+                    🏷️ Washi Tape
+                  </button>
+                </div>
+
+                {/* Grid */}
+                <div className="max-h-64 overflow-y-auto p-1">
+                  {activeStickerTab === 'washi' ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      {WASHI_TAPES.map(w => (
+                        <div
+                          key={w.id}
+                          onClick={() => addWashi(w)}
+                          style={{ backgroundColor: w.color }}
+                          className="p-2.5 rounded-xl border border-black/10 cursor-pointer text-xs font-bold text-black/60 shadow-xs hover:scale-102 transition-transform"
+                        >
+                          + {w.name}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-4 gap-2">
+                      {STICKER_CATEGORIES.find(c => c.id === activeStickerTab)?.stickers.map(stk => (
+                        <button
+                          key={stk.id}
+                          onClick={() => addSticker(stk)}
+                          className="flex flex-col items-center justify-center p-2 rounded-2xl bg-rose-50/50 hover:bg-rose-100/80 border border-rose-100 hover:scale-110 transition-all"
+                        >
+                          {stk.isTextBadge ? (
+                            <span className="px-2 py-0.5 rounded-full text-[10px] bg-white text-rose-800 font-bold border border-rose-200">
+                              {stk.content}
+                            </span>
+                          ) : (
+                            <span className="text-3xl">{stk.content}</span>
+                          )}
+                          <span className="text-[10px] text-gray-500 mt-1 truncate">{stk.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Full Page View Modal */}
+          {modalPage && (
+            <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+              <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-rose-200 max-h-[90vh] overflow-y-auto space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-rose-100">
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl">📖</span>
+                    <h3 className="font-playfair font-bold text-gray-800 text-lg">{modalPage.title}</h3>
+                  </div>
+                  <button onClick={() => setModalPage(null)} className="text-gray-400 hover:text-gray-600 font-bold">✕</button>
+                </div>
+
+                <div className="p-6 rounded-2xl bg-rose-50/30 border border-rose-100 space-y-3">
+                  <p className="text-xs text-gray-400">Por {modalPage.author?.name} • {modalPage.date}</p>
+                  <p className="font-caveat text-2xl text-gray-700 leading-relaxed whitespace-pre-wrap">{modalPage.content}</p>
+                </div>
+
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => {
+                      cozyAudio.playCutePop();
+                      setCurrentPage(modalPage);
+                      setActiveTab('editor');
+                      setModalPage(null);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold text-xs"
+                  >
+                    ✨ Usar no Meu Diário
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Footer */}
+          <footer className="bg-white/70 border-t border-rose-100 py-4 text-center text-xs text-gray-400">
+            <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+              <div className="flex items-center gap-1 text-rose-700 font-bold">
+                <span>🎀</span>
+                <span>Diário Chérie</span>
+                <span>•</span>
+                <span className="text-gray-400 font-normal">Seu cantinho aconchegante de escrita & carinho</span>
+              </div>
+              <div>Fontes Manuscritas • Adesivos Interativos • Feed Privado</div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    // Render React App
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

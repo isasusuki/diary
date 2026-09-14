@@ -8,7 +8,8 @@ import {
   Volume2, 
   VolumeX, 
   Lock,
-  ChevronDown
+  ChevronDown,
+  Download
 } from 'lucide-react';
 import { PastelTheme } from '../types';
 import { PASTEL_THEMES } from '../data/themes';
@@ -42,6 +43,25 @@ export const Navbar: React.FC<NavbarProps> = ({
       setIsPlayingMusic(state);
     });
     setIsPlayingMusic(playing);
+  };
+
+  const downloadStandaloneHtml = async () => {
+    cozyAudio.playSparkle();
+    try {
+      const response = await fetch('/diario-cherie.html');
+      const htmlContent = await response.text();
+      const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'index.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open('/diario-cherie.html', '_blank');
+    }
   };
 
   return (
@@ -210,6 +230,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               </>
             )}
           </div>
+
+          {/* Download Standalone Single-File HTML Button */}
+          <button
+            id="download-standalone-html-btn"
+            onClick={downloadStandaloneHtml}
+            title="Baixar Diário em arquivo único index.html (roda direto no seu navegador sem instalar nada!)"
+            className="px-2.5 py-1.5 rounded-xl bg-pink-100 hover:bg-pink-200 border border-pink-200 text-rose-700 flex items-center gap-1.5 text-xs font-quicksand font-bold transition-all shadow-xs hover:scale-102 active:scale-95"
+          >
+            <Download className="w-3.5 h-3.5 text-rose-600" />
+            <span className="hidden sm:inline">Baixar index.html</span>
+          </button>
 
           {/* User mini pill */}
           <div 

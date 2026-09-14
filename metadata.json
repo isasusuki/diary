@@ -1,0 +1,6 @@
+{
+  "name": "Diário Chérie",
+  "description": "Aplicativo aesthetic e girly para diários com temas pastéis, adesivos fofos, fontes manuscritas, widgets interativos e feed privado comunitário.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

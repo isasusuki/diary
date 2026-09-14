@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-caveat {
+    font-family: 'Caveat', cursive, sans-serif;
+  }
+  .font-dancing {
+    font-family: 'Dancing Script', cursive, sans-serif;
+  }
+  .font-sacramento {
+    font-family: 'Sacramento', cursive, sans-serif;
+  }
+  .font-patrick {
+    font-family: 'Patrick Hand', cursive, sans-serif;
+  }
+  .font-kalam {
+    font-family: 'Kalam', cursive, sans-serif;
+  }
+  .font-quicksand {
+    font-family: 'Quicksand', sans-serif;
+  }
+  .font-comfortaa {
+    font-family: 'Comfortaa', cursive, sans-serif;
+  }
+  .font-playfair {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+/* Paper textures */
+.paper-lined {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    rgba(224, 172, 192, 0.4) 27px,
+    rgba(224, 172, 192, 0.4) 28px
+  );
+  line-height: 28px;
+}
+
+.paper-grid {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(220, 180, 200, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(220, 180, 200, 0.3) 1px, transparent 1px);
+}
+
+.paper-dots {
+  background-size: 22px 22px;
+  background-image: radial-gradient(circle, rgba(205, 160, 185, 0.45) 1.5px, transparent 1.5px);
+}
+
+.paper-kraft {
+  background-color: #F7EFE5;
+  background-image: radial-gradient(rgba(190, 160, 140, 0.15) 1px, transparent 0);
+  background-size: 16px 16px;
+}
+
+.paper-plain {
+  background-color: #FFFDF9;
+}
+
+/* Washi tape aesthetic edges */
+.washi-tape-strip {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(1px);
+  opacity: 0.92;
+}
+
+/* Cute custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FDF4F7;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #F2BDD0;
+  border-radius: 9999px;
+  border: 2px solid #FDF4F7;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E89BB6;
+}
